@@ -23,9 +23,9 @@ zPNG = pygame.image.load('GUIPngs/zdisplay.png')
 texturesPNG = pygame.image.load('GUIPngs/texturesdisplay.png')
 startPNG = pygame.image.load('GUIPngs/startdisplay.png')
 
-
 myVars = vars()
-font = pygame.font.Font('freesansbold.ttf', 32)
+font = pygame.font.Font('freesansbold.ttf', 96)
+currentlevelint = 1
 
 for intforlevel in range(8):
     myVars[f"Level{intforlevel}MATRIX"] = [[0 for _ in range(8)] for _ in range(8)]
@@ -53,7 +53,6 @@ class Block:
 
 
 class Button:
-
     allbuttons = []
 
     def __init__(self, cor1x, cor1y, cor2x, cor2y, typafunc, funcvalue):
@@ -62,7 +61,7 @@ class Button:
         self.cor1y = cor1y
         self.cor2x = cor2x
         self.cor2y = cor2y
-        self.typefuntion = typafunc
+        self.typefunction = typafunc
         self.functionvalue = funcvalue
 
     def click(self):
@@ -72,8 +71,8 @@ class Button:
 
 
 def loadupdateoptions():
-    screen.blit(font.render('Level ' + f'{currentlevelint}', True, (255, 255, 255)), (100, 100))
     screen.blit(LevelDirectionPNG, (0, 0))
+    screen.blit(font.render(f'{currentlevelint}', True, (255, 255, 255)), (290, 50))
     screen.blit(xPNG, (0, 490))
     screen.blit(yPNG, (0, 760))
     screen.blit(zPNG, (0, 1030))
@@ -88,11 +87,41 @@ def checkbuttonclicks():
     for button in Button.allbuttons:
         if button.click():
             print("Something clicked!")
+            button.typefunction(button.functionvalue)
             break
 
 
+def levelchange(butval):
+    global currentlevelint
+    global currentlevel
+    if 8 != currentlevelint and butval == 1 or 1 != currentlevelint and butval == -1:
+        currentlevelint += butval
+        print(f'Level{currentlevelint}MATRIX')
+        currentlevel = eval(f'Level{currentlevelint - 1}MATRIX')
+
+
+def directionchange(butval):
+    pass
+
+
+def sizelimiter(butval):
+    pass
+
+
+def texturechange(butval):
+    global textureselected
+    textureselected = butval
+
+
+def versionchange(butval):
+    pass
+
+
+def start():
+    pass
+
+
 currentlevel = Level1MATRIX
-currentlevelint = 1
 textureselected = EmptyPNG
 
 xdiffercoordset = [480, 640, 800, 960, 1120, 1280, 1440, 1600]
@@ -102,34 +131,34 @@ ydiffercoordset = [0, 160, 320, 480, 640, 800, 960, 1120]
 mousex = 0
 mousey = 0
 
-LevelUP = Button(359, 23, 440, 70, "Levelchange", 1)
-LevelDOWN = Button(359, 99, 440, 151, "Levelchange", -1)
+LevelUP = Button(359, 23, 440, 70, levelchange, 1)
+LevelDOWN = Button(359, 99, 440, 151, levelchange, -1)
 
-North = Button(238, 210, 310, 282, "Directionchange", 0)
-West = Button(48, 289, 167, 393, "Directionchange", 1)
-South = Button(238, 390, 310, 482, "Directionchange", 2)
-East = Button(378, 291, 429, 390, "Directionchange", 3)
+North = Button(238, 210, 310, 282, directionchange, 0)
+West = Button(48, 289, 167, 393, directionchange, 1)
+South = Button(238, 390, 310, 482, directionchange, 2)
+East = Button(378, 291, 429, 390, directionchange, 3)
 
-Xlimit1 = Button(60, 630, 190, 730, "Sizelimiter", "textentry")
-Xlimit2 = Button(290, 630, 420, 730, "Sizelimiter", "textentry")
-Ylimit1 = Button(60, 890, 190, 990, "Sizelimiter", "textentry")
-Ylimit2 = Button(290, 890, 420, 990, "Sizelimiter", "textentry")
-Zlimit1 = Button(60, 1150, 190, 1250, "Sizelimiter", "textentry")
-Zlimit2 = Button(290, 1150, 420, 1250, "Sizelimiter", "textentry")
+Xlimit1 = Button(60, 630, 190, 730, sizelimiter, "textentry")
+Xlimit2 = Button(290, 630, 420, 730, sizelimiter, "textentry")
+Ylimit1 = Button(60, 890, 190, 990, sizelimiter, "textentry")
+Ylimit2 = Button(290, 890, 420, 990, sizelimiter, "textentry")
+Zlimit1 = Button(60, 1150, 190, 1250, sizelimiter, "textentry")
+Zlimit2 = Button(290, 1150, 420, 1250, sizelimiter, "textentry")
 
-Redsand = Button(1850, 90, 1930, 170, "Texturechange", RedsandPNG)
-Sand = Button(1960, 90, 2040, 170, "Texturechange", SandPNG)
-Stone = Button(2070, 90, 2150, 170, "Texturechange", StonePNG)
-Podzol = Button(1850, 200, 1930, 280, "Texturechange", PodzolPNG)
-Mycelium = Button(2070, 200, 2150, 280, "Texturechange", MyceliumPNG)
-Netherrack = Button(1850, 310, 1930, 390, "Texturechange", NetherrackPNG)
-Dirt = Button(1960, 310, 2040, 390, "Texturechange", DirtPNG)
-Grass = Button(2070, 310, 2150, 390, "Texturechange", GrassPNG)
+Redsand = Button(1850, 90, 1930, 170, texturechange, RedsandPNG)
+Sand = Button(1960, 90, 2040, 170, texturechange, SandPNG)
+Stone = Button(2070, 90, 2150, 170, texturechange, StonePNG)
+Podzol = Button(1850, 200, 1930, 280, texturechange, PodzolPNG)
+Mycelium = Button(2070, 200, 2150, 280, texturechange, MyceliumPNG)
+Netherrack = Button(1850, 310, 1930, 390, texturechange, NetherrackPNG)
+Dirt = Button(1960, 310, 2040, 390, texturechange, DirtPNG)
+Grass = Button(2070, 310, 2150, 390, texturechange, GrassPNG)
 
-Version1_12 = Button(1790, 710, 1910, 810, "Versionchange", "1.12")
-Version1_16 = Button(2100, 710, 2220, 810, "Versionchange", "1.16")
+Version1_12 = Button(1790, 710, 1910, 810, versionchange, "1.12")
+Version1_16 = Button(2100, 710, 2220, 810, versionchange, "1.16")
 
-Go = Button(1780, 1090, 2220, 1260, "Start", True)
+Go = Button(1780, 1090, 2220, 1260, start, True)
 
 running = True
 
@@ -139,8 +168,11 @@ for level in range(8):
         for value in range(8):
             texturename = 'Texture_' + f'{level}' + '_' + f'{row}' + '_' + f'{value}'
             myVars[texturename] = Block(xdiffercoordset[row], ydiffercoordset[value])
-            currentlevel[row][value] = myVars[texturename]
+            eval(f"Level{level}MATRIX")[row][value] = myVars[texturename]
 
+
+print(Level1MATRIX)
+print(Level2MATRIX)
 textureselected = DirtPNG
 
 while running:
